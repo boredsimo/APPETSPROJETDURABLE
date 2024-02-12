@@ -1,18 +1,17 @@
-import 'package:app_ets_projet_durable/pages/Trajet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'SearchPage.dart';
-import 'package:http/http.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'pageMeteo.dart';
+import 'SearchPage.dart';
 
 class CollapsingAppbarPage extends StatefulWidget {
-  const CollapsingAppbarPage(
-      {Key? key, required this.polylinePoints, required this.co2Emissions})
-      : super(key: key);
+  const CollapsingAppbarPage({
+    Key? key,
+    required this.polylinePoints,
+    required this.co2Emissions,
+  }) : super(key: key);
+
   final List<PointLatLng> polylinePoints;
   final double co2Emissions;
 
@@ -60,20 +59,36 @@ class _CollapsingAppbarPageState extends State<CollapsingAppbarPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchPage(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                if (widget.polylinePoints.isNotEmpty)
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchPage(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                    ),
+                    child: const Text("Finish"),
                   ),
-                  child: const Text("Finish"),
-                ),
+                if (widget.polylinePoints.isEmpty)
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchPage(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                    ),
+                    child: const Text("Rechercher"),
+                  ),
                 Text(
                   'CO2 Emissions: ${widget.co2Emissions.toStringAsFixed(2)} g',
                   style: TextStyle(fontSize: 16.0),
@@ -82,111 +97,6 @@ class _CollapsingAppbarPageState extends State<CollapsingAppbarPage> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.secondaryContainer,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: GNav(
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            tabBackgroundColor: Theme.of(context).colorScheme.primary,
-            activeColor: Theme.of(context).colorScheme.onPrimary,
-            gap: 12,
-            padding: const EdgeInsets.all(20),
-            tabs: [
-              GButton(
-                icon: Icons.search,
-                text: 'Search',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const SearchPage(), //remplacer par le nom de la  page
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        var begin = const Offset(1.0, 1.0);
-                        var end = Offset.zero;
-                        var curve = Curves.ease;
-
-                        final tween = Tween(begin: begin, end: end);
-                        final curvedAnimation = CurvedAnimation(
-                          parent: animation,
-                          curve: curve,
-                        );
-
-                        return SlideTransition(
-                          position: tween.animate(curvedAnimation),
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-              GButton(
-                icon: Icons.sunny,
-                text: 'Meteo',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const PageMeteo(), //remplacer par le nom de la  page
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        var begin = const Offset(1.0, 1.0);
-                        var end = Offset.zero;
-                        var curve = Curves.ease;
-
-                        final tween = Tween(begin: begin, end: end);
-                        final curvedAnimation = CurvedAnimation(
-                          parent: animation,
-                          curve: curve,
-                        );
-
-                        return SlideTransition(
-                          position: tween.animate(curvedAnimation),
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-              GButton(
-                icon: Icons.account_circle,
-                text: 'Profil',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const SearchPage(), //remplacer par le nom de la  page
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        var begin = const Offset(1.0, 1.0);
-                        var end = Offset.zero;
-                        var curve = Curves.ease;
-
-                        final tween = Tween(begin: begin, end: end);
-                        final curvedAnimation = CurvedAnimation(
-                          parent: animation,
-                          curve: curve,
-                        );
-
-                        return SlideTransition(
-                          position: tween.animate(curvedAnimation),
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -209,42 +119,3 @@ class _CollapsingAppbarPageState extends State<CollapsingAppbarPage> {
     return {polyline};
   }
 }
-
-List<Trajet> trajets = [
-  Trajet(
-    Id: "1",
-    PositionDepart: "123 Avenue Mont-Royal, Montreal, QC",
-    PositionArrivee: "456 Avenue du Parc, Montreal, QC",
-    QteCo2NonEmis: 10,
-  ),
-  Trajet(
-    Id: "2",
-    PositionDepart: "789 Avenue Laurier, Montreal, QC",
-    PositionArrivee: "101 Avenue des Pins, Montreal, QC",
-    QteCo2NonEmis: 15,
-  ),
-  Trajet(
-    Id: "3",
-    PositionDepart: "234 Avenue Papineau, Montreal, QC",
-    PositionArrivee: "567 Avenue Greene, Montreal, QC",
-    QteCo2NonEmis: 8,
-  ),
-  Trajet(
-    Id: "4",
-    PositionDepart: "789 Avenue des Pins, Montreal, QC",
-    PositionArrivee: "2345 Av du Mont-Royal, Montreal, QC",
-    QteCo2NonEmis: 12,
-  ),
-  Trajet(
-    Id: "5",
-    PositionDepart: "678 Avenue McGill, Montreal, QC",
-    PositionArrivee: "901 Avenue Saint-Denis, Montreal, QC",
-    QteCo2NonEmis: 18,
-  ),
-  Trajet(
-    Id: "6",
-    PositionDepart: "3456 Avenue Laurier, Montreal, QC",
-    PositionArrivee: "789 Avenue Atwater, Montreal, QC",
-    QteCo2NonEmis: 14,
-  ),
-];
