@@ -1,0 +1,37 @@
+auteur: Othmane Sedjari
+uuid: 7o279bc8-c0af-49b7-899b-3370f08f8721
+type: prog
+titre: Derniere Session Github 
+niveau: avancé
+
+énoncé: |
+    Les étudiants de la 5ème session du collège ont besoin de valider tous leurs cours pour pouvoir suivre les deux cours intensifs et  effectuer leur stage. Pour cet exercice, nous allons demander à l'utilisateur de saisir le nombre de cours qu'il lui reste pour obtenir son diplôme.
+
+    Si le nombre de cours restants est supérieur à trois, affichez la phrase suivante 
+        'Vous devez valider tous vos cours préalables pour accéder à la dernière session !'
+
+    Si le nombre de cours est égal à 3 
+        'Félicitations, vous êtes proche de votre objectif. Bonne chance pour trouver un stage !'
+
+    Si le nombre est inférieur à trois 
+        'Bienvenue au Revenant !'
+
+    De plus, nous ajouterons une gestion d'erreur pour le cas où l'utilisateur saisit autre chose qu'un numéro. Nous lui demanderons    alors de ressaisir sa réponse.
+
+ébauches:
+  "kotlin": |
+      // Utilisez main()
+
+tests:
+  - nom: "Une annee de plus"
+    entrée: 6
+    sortie: Vous devez valider tous vos cours préalables pour accéder à la dernière session !
+  - nom: "Finissant"
+    entrée: 3
+    sortie: Félicitations, vous êtes proche de votre objectif. Bonne chance pour trouver un stage !
+  - nom: "Revenant"
+    entrée: 2
+    sortie: Bienvenue au Revenant !
+  - nom: "Gestion des erreurs"
+    entrée: abc
+    sortie: Il faut saisir un entier valide. Veuillez réessayer ! 
